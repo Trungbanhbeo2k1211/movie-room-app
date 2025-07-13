@@ -5,7 +5,7 @@ import cloudinary.api
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key'
-    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:123456@localhost:5432/moviedb"
+    SQLALCHEMY_DATABASE_URI = "postgresql://moviedb_o1cq_user:9XnMFOKcUcsv9iH8nL4VGXCBCbAx0d2P@dpg-d1prqo0dl3ps7395c1hg-a.oregon-postgres.render.com/moviedb_o1cq"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
