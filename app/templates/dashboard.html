@@ -1,11 +1,229 @@
-<h2>👋 Chào mừng, {{ current_user.username }}!</h2>
-<p>Vai trò: {{ current_user.role }}</p>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Chào mừng đến Movie Room!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8A2BE2;
+      --primary-dark: #7B1FA2;
+      --secondary: #FF6B6B;
+      --light: #F8F9FA;
+      --dark: #212529;
+      --gray: #6C757D;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--dark);
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+      background: linear-gradient(to right, #8A2BE2, #FF6B6B);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--gray);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(138, 43, 226, 0.3);
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background-color: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .hero-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #8A2BE2, #FF6B6B);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 4rem;
+      flex-wrap: wrap;
+    }
+    
+    .feature {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      width: 280px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+    
+    .feature:hover {
+      transform: translateY(-10px);
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    .feature-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+    
+    .feature-desc {
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .cta-buttons {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
 
-<ul>
-  <li><a href="{{ url_for('room.room_home') }}">🎥 Vào phòng xem phim</a></li>
-  <li><a href="{{ url_for('room.create_room_form') }}">➕ Tạo phòng mới (upload video)</a></li>
-</ul>
-
-{% if current_user.role == 'admin' %}
-  <a href="{{ url_for('admin.manage_videos') }}">🛠 Quản lý tất cả video</a>
-{% endif %}
+<body>
+  <div class="container">
+    <div class="hero-icon">🎬</div>
+    <h1>Chia sẻ khoảnh khắc cùng Movie Room</h1>
+    <p class="subtitle">Xem phim cùng bạn bè, trò chuyện trực tiếp và tạo những kỷ niệm đáng nhớ trong không gian riêng tư của bạn</p>
+    
+    <div class="cta-buttons">
+      <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+          <path d="M15 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 17L15 12L10 7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 12H3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Đăng nhập
+      </a>
+      <a href="{{ url_for('auth.register') }}" class="btn btn-secondary">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
+          <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#8A2BE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="#8A2BE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 8V14" stroke="#8A2BE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M23 11H17" stroke="#8A2BE2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Đăng ký
+      </a>
+    </div>
+    
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">🎥</div>
+        <h3 class="feature-title">Xem cùng nhau</h3>
+        <p class="feature-desc">Đồng bộ phim theo thời gian thực với bạn bè dù ở bất cứ đâu</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">💬</div>
+        <h3 class="feature-title">Trò chuyện trực tiếp</h3>
+        <p class="feature-desc">Chat video, gửi tin nhắn và tương tác trong khi xem phim</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Riêng tư & an toàn</h3>
+        <p class="feature-desc">Phòng riêng được bảo mật chỉ dành cho bạn và người thân</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
