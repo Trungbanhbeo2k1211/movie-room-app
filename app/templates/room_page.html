@@ -1,0 +1,434 @@
+<!-- <!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Phòng {{ room.code }}</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        video {
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>🎬 Phòng mã: <strong>{{ room.code }}</strong></h2>
+
+    <div class="info">
+        <p>🎥 <strong>Video ID:</strong> {{ room.video_id or 'Chưa có' }}</p>
+        <p>👤 <strong>Người 1:</strong> {{ room.user1_id }}</p>
+        <p>👤 <strong>Người 2:</strong> {{ room.user2_id or 'Chưa có' }}</p>
+    </div>
+
+    {% if room.video %}
+    <video id="videoPlayer" width="640" controls>
+        <source src="{{ url_for('static', filename='videos/' + room.video.filename) }}" type="video/mp4">
+        Trình duyệt của bạn không hỗ trợ video.
+    </video>
+    {% else %}
+    <p>⚠️ Chưa có video được gán cho phòng này.</p>
+    {% endif %}
+
+    <br><br>
+    <a href="{{ url_for('room.room_home') }}">← Quay lại danh sách phòng</a>
+    <h3>💬 Trò chuyện trong phòng</h3>
+    <div id="chat-box"
+        style="border:1px solid #ccc; padding:10px; width:640px; height:200px; overflow-y:scroll; margin-bottom:10px;">
+    </div>
+
+    <form id="chat-form">
+        <input type="text" id="chat-message" placeholder="Nhập tin nhắn..." style="width: 540px;" required>
+        <button type="submit">Gửi</button>
+    </form>
+
+    {% if room.video %}
+    <script>
+        const socket = io();
+        const roomCode = "{{ room.code }}";
+        const userId = "{{ session['user_id'] }}";
+
+        // Tham gia phòng
+        socket.emit('join_room', { room: roomCode });
+
+        // Gửi tin nhắn
+        const chatForm = document.getElementById('chat-form');
+        const chatBox = document.getElementById('chat-box');
+        const messageInput = document.getElementById('chat-message');
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const msg = messageInput.value.trim();
+            if (msg) {
+                socket.emit('chat_message', {
+                    room: roomCode,
+                    sender_id: userId,
+                    message: msg
+                });
+                messageInput.value = '';
+            }
+        });
+
+        // Nhận tin nhắn
+        socket.on('chat_message', (data) => {
+            const p = document.createElement('p');
+            p.innerHTML = `<strong>${data.sender}:</strong> ${data.message}`;
+            chatBox.appendChild(p);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    </script>
+    {% endif %} -->
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Phòng {{ room.code }}</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --dark-color: #2d3436;
+            --light-color: #f5f6fa;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --error-color: #d63031;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin: 30px 0 15px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .info p {
+            margin-bottom: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info strong {
+            color: var(--dark-color);
+            min-width: 100px;
+            display: inline-block;
+        }
+
+        video {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+            background-color: #000;
+            aspect-ratio: 16/9;
+        }
+
+        #chat-box {
+            background-color: white;
+            border: 2px solid #dfe6e9;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        #chat-box p {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        #chat-box p:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        #chat-box strong {
+            color: var(--primary-color);
+        }
+
+        #chat-form {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        #chat-message {
+            flex-grow: 1;
+            padding: 14px 20px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        #chat-message:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        #chat-form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #chat-form button:hover {
+            background-color: #5649c0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #5649c0;
+            text-decoration: underline;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info,
+        video,
+        #chat-box {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            #chat-form {
+                flex-direction: column;
+            }
+
+            #chat-form button {
+                padding: 12px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h2>🎬 Phòng mã: <strong>{{ room.code }}</strong></h2>
+
+    <div class="info">
+        <p>🎥 <strong>Video ID:</strong> {{ room.video_id or 'Chưa có' }}</p>
+        <p>👤 <strong>Người 1:</strong> {{ room.user1_id }}</p>
+        <p>👤 <strong>Người 2:</strong> {{ room.user2_id or 'Chưa có' }}</p>
+    </div>
+
+    {% if room.video %}
+    {% if room.video.filename.startswith('cloudinary:') %}
+    {% set public_id = room.video.filename[11:] %}
+    <video id="videoPlayer" width="640" controls>
+        <source src="https://res.cloudinary.com/dcd8oincj/video/upload/{{ public_id }}" type="video/mp4">
+        Trình duyệt không hỗ trợ video.
+    </video>
+    {% else %}
+    <video id="videoPlayer" width="640" controls>
+        <source src="{{ url_for('static', filename='videos/' + room.video.filename) }}" type="video/mp4">
+        Trình duyệt không hỗ trợ video.
+    </video>
+    {% endif %}
+    {% else %}
+    <div class="info" style="background-color: #fff8e1; border-left: 4px solid orange;">
+        <p>⚠️ Chưa có video được gán cho phòng này.</p>
+    </div>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('room.room_home') }}">⬅️ Quay lại danh sách phòng</a>
+
+    <h3>💬 Trò chuyện trong phòng</h3>
+    <div id="chat-box"></div>
+
+    <form id="chat-form">
+        <input type="text" id="chat-message" placeholder="Nhập tin nhắn..." required>
+        <button type="submit">Gửi</button>
+    </form>
+
+    <script>
+        const socket = io();
+        const roomCode = "{{ room.code }}";
+        const userId = "{{ session['user_id'] }}";
+        const video = document.getElementById('videoPlayer');
+
+        // ===== 🎯 Vào phòng chat =====
+        socket.emit('join_room', { room: roomCode });
+
+        // ===== 💬 Chat trong phòng =====
+        const chatForm = document.getElementById('chat-form');
+        const chatBox = document.getElementById('chat-box');
+        const messageInput = document.getElementById('chat-message');
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const msg = messageInput.value.trim();
+            if (msg) {
+                socket.emit('chat_message', {
+                    room: roomCode,
+                    sender_id: userId,
+                    message: msg
+                });
+                messageInput.value = '';
+            }
+        });
+
+        socket.on('chat_message', (data) => {
+            const p = document.createElement('p');
+            p.innerHTML = `<strong>${data.sender}:</strong> ${data.message}`;
+            chatBox.appendChild(p);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // ===== 🎬 Đồng bộ video giữa 2 người =====
+        if (video) {
+            // Lắng nghe hành động
+            video.addEventListener('play', () => {
+                socket.emit('video_action', {
+                    room: roomCode,
+                    sender_id: userId,
+                    action: 'play',
+                    timestamp: video.currentTime
+                });
+            });
+
+            video.addEventListener('pause', () => {
+                socket.emit('video_action', {
+                    room: roomCode,
+                    sender_id: userId,
+                    action: 'pause',
+                    timestamp: video.currentTime
+                });
+            });
+
+            // Lưu handler riêng để dùng khi cần remove
+            const seekHandler = () => {
+                socket.emit('video_action', {
+                    room: roomCode,
+                    sender_id: userId,
+                    action: 'seek',
+                    timestamp: video.currentTime
+                });
+            };
+
+            video.addEventListener('seeked', seekHandler);
+
+            // Nhận sự kiện điều khiển video từ người khác
+            socket.on('sync_video', (data) => {
+                if (data.sender_id === userId) return;
+
+                // Tạm thời gỡ sự kiện để tránh lặp vô hạn
+                video.removeEventListener('seeked', seekHandler);
+                video.currentTime = data.timestamp;
+
+                if (data.action === 'play') {
+                    video.play();
+                } else if (data.action === 'pause') {
+                    video.pause();
+                }
+
+                // Gắn lại sau một khoảng thời gian ngắn
+                setTimeout(() => {
+                    video.addEventListener('seeked', seekHandler);
+                }, 200);
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>

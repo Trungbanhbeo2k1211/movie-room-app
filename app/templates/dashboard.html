@@ -1,0 +1,11 @@
+<h2>👋 Chào mừng, {{ current_user.username }}!</h2>
+<p>Vai trò: {{ current_user.role }}</p>
+
+<ul>
+  <li><a href="{{ url_for('room.room_home') }}">🎥 Vào phòng xem phim</a></li>
+  <li><a href="{{ url_for('room.create_room_form') }}">➕ Tạo phòng mới (upload video)</a></li>
+</ul>
+
+{% if current_user.role == 'admin' %}
+  <a href="{{ url_for('admin.manage_videos') }}">🛠 Quản lý tất cả video</a>
+{% endif %}

@@ -1,0 +1,228 @@
+<!-- <h2>🎬 Tạo phòng riêng tư (kèm upload video)</h2>
+
+<form method="POST" action="{{ url_for('room.create_room') }}" enctype="multipart/form-data">
+  <label>Tiêu đề video:</label><br>
+  <input type="text" name="title"><br><br>
+
+  <label>Chọn file video:</label><br>
+  <input type="file" name="file" accept="video/*" required><br><br>
+
+  <button type="submit">Tạo phòng</button>
+</form>
+
+<hr>
+
+<h2>🔑 Tham gia phòng bằng mã</h2>
+<form method="POST" action="{{ url_for('room.join_room') }}">
+  <label>Nhập mã phòng:</label><br>
+  <input type="text" name="code" required>
+  <button type="submit">Tham gia</button>
+</form> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Phòng Video</title>
+  <style>
+    :root {
+      --primary-color: #6c5ce7;
+      --secondary-color: #a29bfe;
+      --accent-color: #fd79a8;
+      --dark-color: #2d3436;
+      --light-color: #f5f6fa;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h2 {
+      color: var(--primary-color);
+      margin: 25px 0 15px;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #dfe6e9;
+      margin: 30px 0;
+    }
+    
+    form {
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    form:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+    
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 2px solid #dfe6e9;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    input[type="file"]:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    input[type="file"] {
+      padding: 10px;
+      background-color: var(--light-color);
+      cursor: pointer;
+    }
+    
+    input[type="file"]::-webkit-file-upload-button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    input[type="file"]::-webkit-file-upload-button:hover {
+      background-color: var(--primary-color);
+    }
+    
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    button:hover {
+      background-color: #5649c0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+    }
+    
+    .join-form {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+    
+    .join-form div {
+      flex-grow: 1;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    form {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      .join-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎬 Tạo hoặc tham gia phòng xem video</h1>
+
+  <!-- 🔧 Form tạo phòng -->
+  <form method="POST" action="{{ url_for('room.create_room') }}" enctype="multipart/form-data">
+    <fieldset>
+      <legend>📤 Tạo phòng (upload video lên Cloudinary)</legend>
+
+      <label for="title">Tiêu đề video:</label>
+      <input type="text" name="title" id="title" placeholder="Nhập tiêu đề video (tuỳ chọn)">
+
+      <label for="file">Chọn file video:</label>
+      <input type="file" name="file" id="file" accept="video/*" required>
+
+      <button type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" />
+        </svg>
+        Tạo phòng
+      </button>
+    </fieldset>
+  </form>
+
+  <!-- 🔑 Form tham gia phòng -->
+  <form method="POST" action="{{ url_for('room.join_room') }}">
+    <fieldset>
+      <legend>🔑 Tham gia phòng bằng mã</legend>
+
+      <label for="code">Nhập mã phòng:</label>
+      <input type="text" name="code" id="code" placeholder="Ví dụ: A1B2C3" required>
+
+      <button type="submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        Tham gia
+      </button>
+    </fieldset>
+  </form>
+
+</body>
+</html>

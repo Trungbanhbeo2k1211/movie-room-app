@@ -1,0 +1,14 @@
+<h2>🎞️ Upload Video</h2>
+
+<form method="POST" enctype="multipart/form-data">
+  <label>Tiêu đề video:</label><br>
+  <input type="text" name="title"><br><br>
+
+  <label>Chọn file video:</label><br>
+  <input type="file" name="file" accept="video/*" required><br><br>
+
+  <button type="submit">Tải lên</button>
+</form>
+
+<br>
+<a href="{{ url_for('room.room_home') }}">← Quay lại trang phòng</a>
